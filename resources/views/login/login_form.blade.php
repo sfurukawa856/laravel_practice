@@ -15,15 +15,19 @@
 	<form class="form-signin" method="post" action="{{ route('login') }}">
 		@csrf
 		<h1 class="h3 mb-3 font-weight-normal">ログインフォーム</h1>
-		@if($errors->any())
+
+		@if ($errors->any())
 		<div class="alert alert-danger">
 			<ul>
-				@foreach($errors->all() as $error)
-				<li>{{$error}}</li>
+				@foreach ($errors->all() as $error)
+				<li>{{ $error }}</li>
 				@endforeach
 			</ul>
 		</div>
 		@endif
+
+		<x-alert type="danger" :session="session('danger')" />
+
 		<label for="inputEmail" class="sr-only">Email address</label>
 		<input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required
 			autofocus>

@@ -17,6 +17,7 @@ class AuthController extends Controller {
 	public function showLogin() {
 		return view('login.login_form');
 	}
+
 	/**
 	 * login method
 	 * @param App\Http\Requests\LoginFormRequest
@@ -28,10 +29,26 @@ class AuthController extends Controller {
 			// セッション再生成
 			$request->session()->regenerate();
 
-			return redirect('home')->with('login_success', 'ログイン成功しました。');
+			return redirect()->route('home')->with('success', 'ログイン成功しました。');
 		}
 		return back()->withErrors([
-			'login_error' => 'メールアドレスかパスワードが間違っています。'
+			'danger' => 'メールアドレスかパスワードが間違っています。'
 		]);
+	}
+
+	/**
+	 * ユーザーをアプリケーションからログアウトさせる
+	 *
+	 * @param  \Illuminate\Http\Request  $request
+	 * @return \Illuminate\Http\Response
+	 */
+	public function logout(Request $request) {
+		Auth::logout();
+
+		$request->session()->invalidate();
+
+		$request->session()->regenerateToken();
+
+		return redirect()->route('showLogin')->with('danger', 'ログアウトしました。');
 	}
 }

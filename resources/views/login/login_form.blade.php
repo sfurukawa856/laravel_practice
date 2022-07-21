@@ -15,23 +15,20 @@
 	<form class="form-signin" method="post" action="{{ route('login') }}">
 		@csrf
 		<h1 class="h3 mb-3 font-weight-normal">ログインフォーム</h1>
-		@if($errors->any())
+
+		@if ($errors->any())
 		<div class="alert alert-danger">
 			<ul>
-				@foreach($errors->all() as $error)
-				<li>{{$error}}</li>
+				@foreach ($errors->all() as $error)
+				<li>{{ $error }}</li>
 				@endforeach
 			</ul>
 		</div>
 		@endif
 
-		@if(session('login_error'))
-		<div class="alert alert-danger">
-			{{ session('login_error') }}
-		</div>
-		@endif
+		<x-alert type="danger" :session="session('danger')" />
 
-			<label for="inputEmail" class="sr-only">Email address</label>
+		<label for="inputEmail" class="sr-only">Email address</label>
 		<input type="email" name="email" id="inputEmail" class="form-control" placeholder="Email address" required
 			autofocus>
 		<label for="inputPassword" class="sr-only">Password</label>

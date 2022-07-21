@@ -21,5 +21,6 @@ class AuthController extends Controller {
 	 * @return void
 	 */
 	public function login(LoginFormRequest $request) {
+		dd($request->all());
 	}
 }

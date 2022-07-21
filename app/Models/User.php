@@ -41,4 +41,52 @@ class User extends Authenticatable {
 	// protected $casts = [
 	// 	'email_verified_at' => 'datetime',
 	// ];
+
+	/**
+	 * getUserByEmail method Emailがマッチするユーザーを返す
+	 * @param string $email
+	 * @return object
+	 */
+	public function getUserByEmail($email) {
+		return User::where('email', '=', $email)->first();
+	}
+
+	/**
+	 * isAccountLocked method アカウントがロックされているかチェックする
+	 * @param object $user
+	 * @return bool
+	 */
+	public function isAccountLocked($user) {
+		if ($user->locked_flg === 1) {
+			return true;
+		} else {
+			return false;
+		}
+	}
+
+	/**
+	 * resetErrorCount method エラーカウントをリセットする
+	 * @param object $user
+	 * @return void
+	 */
+	public function resetErrorCount($user) {
+		if ($user->error_count > 0) {
+			$user->error_count = 0;
+			$user->save();
+		}
+	}
+
+	/**
+	 * lockAccount method
+	 * @param object $user
+	 * @return bool
+	 */
+	public function lockAccount($user) {
+		if ($user->error_count > 5) {
+			$user->locked_flg = 1;
+			$user->save();
+			return true;
+		}
+		return false;
+	}
 }

@@ -11,6 +11,16 @@ use Illuminate\Support\Facades\Auth;
 use App\Models\User;
 
 class AuthController extends Controller {
+	// IoCコンテナに基づく設計　※詳細は参考サイト参照
+	/**
+	 * __construct method
+	 * @param
+	 * @return void
+	 */
+	public function __construct(User $user) {
+		$this->user = $user;
+	}
+
 	/**
 	 * showLogin method
 	 * @param
@@ -29,21 +39,18 @@ class AuthController extends Controller {
 		$credentials = $request->only('email', 'password');
 
 		// ログインユーザーが存在するかチェック
-		$user = User::where('email', '=', $credentials['email'])->first();
+		$user = $this->user->getUserByEmail($credentials['email']);
 
 		if (!is_null($user)) {
 
-			if ($user->locked_flg === 1) {
+			if ($this->user->isAccountLocked($user)) {
 				return back()->withErrors([
 					'danger' => 'アカウントがロックされています。'
 				]);
 			}
 
 			if (Auth::attempt($credentials)) {
-				if ($user->error_count > 0) {
-					$user->error_count = 0;
-					$user->save();
-				}
+				$this->user->resetErrorCount($user);
 				// セッション再生成
 				$request->session()->regenerate();
 
@@ -51,9 +58,8 @@ class AuthController extends Controller {
 			}
 
 			$user->error_count++;
-			if ($user->error_count > 5) {
-				$user->locked_flg = 1;
-				$user->save();
+
+			if ($this->user->lockAccount($user)) {
 				return back()->withErrors([
 					'danger' => 'アカウントがロックされました。'
 				]);

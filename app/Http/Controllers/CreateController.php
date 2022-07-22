@@ -39,6 +39,13 @@ class CreateController extends Controller
 		$user = $this->user->getUserByEmail($createData['email']);
 
 		if(is_null($user)){
+			// TODO:要確認
+			$this->user->name = $createData['name'];
+			$this->user->email = $createData['email'];
+			$this->user->password = $createData['password'];
+
+			$this->user->save();
+
 			return redirect()->route('home')->with('success', 'アカウント登録に成功しました。');
 		}
 

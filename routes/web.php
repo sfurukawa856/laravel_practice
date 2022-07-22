@@ -2,6 +2,8 @@
 
 use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Auth\AuthController;
+use App\Http\Controllers\CreateController;
+
 /*
 |--------------------------------------------------------------------------
 | Web Routes
@@ -19,6 +21,11 @@ Route::middleware(['guest'])->group(
 		Route::get('/', [AuthController::class, 'showLogin'])->name('showLogin');
 		// ログイン処理
 		Route::post('login', [AuthController::class, 'login'])->name('login');
+
+		// 新規登録画面表示
+		Route::get('showCreate', [CreateController::class, 'showCreate'])->name('showCreate');
+		// 新規登録処理
+		Route::post('create', [CreateController::class, 'create'])->name('create');
 	}
 );
 
